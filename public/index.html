@@ -12,11 +12,18 @@
       /* chainparams */
       const PUBKEY_ADDRESS = 30;
       const SECRET_KEY     = 212;
+      const PRIVKEY_BYTE_LENGTH = 38;  
   </script>
 
   <script type="text/javascript" src="js/lib/crypto-min.js"></script>
   <script type="text/javascript" src="js/lib/crypto-sha256.js"></script>
   <script type="text/javascript" src="js/lib/crypto-sha256-hmac.js"></script>
+
+
+  <script type="text/javascript" src="js/lib/noble-secp256k1.js"></script>
+  <script type="text/javascript" src="js/lib/bn.js"></script>
+
+
   <script type="text/javascript" src="js/lib/ripemd160.js"></script>
   <script type="text/javascript" src="js/lib/jsbn.js"></script>
   <script type="text/javascript" src="js/lib/ellipticcurve.js"></script>
@@ -26,9 +33,29 @@
   <script type="text/javascript" src="js/network.js"></script>
   <script type="text/javascript" src="js/bitTrx.js"></script>
   <script type="text/javascript" src="js/global.js"></script>
+
+  <!-- New file for all of our new code -->
+  <script type="text/javascript" src="js/sweep.js"></script>
+
 </head>
 
 <body>
+  <!-- 
+    UTXO syncing (grabbing 'em all off Blockbook for the given privkey).
+    Sweeping those UTXOs to user-given-address. 
+  -->
+
+  <!-- First step is to get the users privkey -->
+  <form>
+    <label for="privkey">Privkey</label><br>
+    <input type="text" id="privkey" name="privkey"><br>
+
+    <label for="sweepAddr">sweep address</label><br>
+    <input type="text" id="sweepAddr" name="sweepAddr"><br>
+
+    <button type="button" onclick="testingPage()">submit</button>
+  </form>
+
 </body>
 
 </html>
