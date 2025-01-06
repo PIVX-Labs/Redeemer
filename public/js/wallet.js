@@ -94,6 +94,8 @@ function importWallet(newWif = '') {
     const pubKey = getPubkey(privateKeyBytes);
 
     // TODO
+    return pubKey
+
 }
 
 function getPubkey(privateKeyBytes) {
@@ -128,5 +130,6 @@ function getPubkey(privateKeyBytes) {
     var checksumPubKey = String(pubKeyHashingSF).substr(0, 8).toUpperCase()
     var pubKeyPreBase = pubKeyHashNetwork + checksumPubKey
     var pubKey = to_b58(hexStringToByte(pubKeyPreBase), MAP)
-    console.log(pubKey);
+    // console.log(pubKey);
+    return pubKey
 }

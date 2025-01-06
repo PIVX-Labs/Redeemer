@@ -106,6 +106,7 @@
 			var o = {};
 			var buf = [];
 			var addrDecoded = btrx.addressDecode(address);
+			console.log(addrDecoded)
 			o.value = new BigInteger('' + Math.round((value * 1) * 1e8), 10);
 			buf.push(118); // OP_DUP
 			buf.push(169); // OP_HASH160
