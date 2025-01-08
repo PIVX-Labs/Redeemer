@@ -31,8 +31,11 @@ async function sweep(privateKey, desitnationAddress){
     trx.addinput(txid,index,script);
 
     // Calculate the fee
-    const amountToSweep = UTXOs[0].value - calculatefee(100)
-    console.log(UTXOs[0].value )
+    const feeAmount = parseFloat(calculatefee(300))
+    const currentAmountAvaliable = parseFloat(UTXOs[0].value)/100000000
+    console.log(UTXOs[0].value)
+    console.log(feeAmount)
+    const amountToSweep = (currentAmountAvaliable - feeAmount).toFixed(8)
     console.log(amountToSweep)
 
 

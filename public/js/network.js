@@ -3,7 +3,10 @@ var url = 'https://explorer.duddino.com';
 
 function calculatefee(bytes) {
   // TEMPORARY: Hardcoded fee per-byte
-  fee = Number(((bytes * 250) / 100000000).toFixed(8)); // 250 sats/byte
+  let fee = Number(((bytes * 1) / 100000000).toFixed(8)); // 1 sats/byte
+  if (fee < (1920/ 100000000).toFixed(8)){
+    fee = (1920/ 100000000).toFixed(8)
+  }
   return fee
 }
 
