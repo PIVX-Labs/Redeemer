@@ -229,8 +229,8 @@ async function verifyWIF(strWIF = "", fParseBytes = false, skipVerification = fa
     // const shaHash = new jsSHA(0, 0, { "numRounds": 2 });
     // shaHash.update(bWIF.slice(0, 34));
     //return createHash("sha256").update(createHash("sha256").update(data).digest()).digest();
-    const bChecksum1st = await window.crypto.subtle.digest("SHA-256", data);
-    const bChecksum = await window.crypto.subtle.digest("SHA-256", bChecksum1st);
+    // const bChecksum1st = await window.crypto.subtle.digest("SHA-256", data);
+    // const bChecksum = await window.crypto.subtle.digest("SHA-256", bChecksum1st);
     // Verify checksum (comparison by String since JS hates comparing object-like primitives)
     const bChecksumWIF = bWIF.slice(bWIF.byteLength - 4);
     // const bChecksum = shaHash.getHash(0).slice(0, 4);
@@ -247,9 +247,14 @@ async function verifyWIF(strWIF = "", fParseBytes = false, skipVerification = fa
 */
 async function testingPage(){
 
-    const privateKey = document.getElementById("privkey").value
+    const pivcode = document.getElementById("PivCode").value
+    // const privateKey = document.getElementById("privkey").value
     const desitinationAddress = document.getElementById("sweepAddr").value
 
+    const code = new PromoCode(pivcode)
+    const derived = await code.derivePrivateKey()
+    console.log("derived: ", derived)
+    console.log("DerivedPassed: ", derived.wif)
 
-    sweep(privateKey,desitinationAddress)
+    sweep(derived.wif,desitinationAddress)
 }

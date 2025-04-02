@@ -1,0 +1,17 @@
+{
+  "name": "browserify_redeemer",
+  "version": "1.0.0",
+  "description": "Test case for moving to browserify",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pivx-promos": "^0.2.0"
+ 
+  }
+
+}
