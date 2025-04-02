@@ -9,4 +9,4 @@ async function main(passedCode){
     console.log(cWallet)
 }
 
-main("Test2-5ECDY")
+main("Test3-KWN9Q")

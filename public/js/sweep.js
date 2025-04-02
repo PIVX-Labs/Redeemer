@@ -128,12 +128,14 @@ class PromoCode {
         let i = 0;
         let lastTime = Date.now();
         const times = []; // A 10-entry rolling average of the time diff between reports
-        const updateInterval = Math.ceil(target / 100); // Update progress every 1% of target
-
+        const updateInterval = Math.ceil(target / 100); // Update progress every 1% of target        
+        console.log("Start Time: ", Date.now())
         // Recursively hash until our target is hit
         while (i < target) {
-            arrByteCode = await window.crypto.subtle.digest("SHA-256", arrByteCode);
-            i++;
+            // WAS WORKING WITH THIS JUST SLOW AS HELL
+            // arrByteCode = await window.crypto.subtle.digest("SHA-256", arrByteCode);
+            
+            arrByteCode = Asha256(arrByteCode)
             // Send progress updates every updateInterval iterations
             if (i % updateInterval === 0) {
                 // Track progress percentage
@@ -149,10 +151,13 @@ class PromoCode {
                 lastTime = currentTime;
 
                 // Emit Progress to the receiver
-                document.getElementById("derivingCode").innerHTML = "Progress: "+ progress + " Time between iterations: "+ avgTimePerIteration + " ETA:" + eta
+                
+                console.log("Progress: ", progress, "%  Estimated Time Remaining: ",eta)
             }
-        }
+            i++;
 
+        }
+        console.log("End Time: ", Date.now())
         // Encode the final hash as a WIF Private Key (the 'wallet' of the Promo Code)
         console.log("ArrayCodeBytes: ",Array.from(new Uint8Array(arrByteCode)))
         console.log("privatePrefix: ",privatePrefix)
@@ -205,9 +210,11 @@ async function sweep(privateKey, desitnationAddress){
 
 
     trx.addoutput(desitnationAddress,amountToSweep);
-    console.log("Signed TRX: ", trx.sign(privateKey,1))
+    const signedTRX = trx.sign(privateKey,1)
+    console.log("Signed TRX: ", signedTRX)
 
-
+    // TODO: In the future we will return the confirmed txid but for now just return the signedTRX
+    return signedTRX
     
 }
   
@@ -226,14 +233,14 @@ async function verifyWIF(strWIF = "", fParseBytes = false, skipVerification = fa
     }
     
     // Perform SHA256d hash of the WIF bytes
-    // const shaHash = new jsSHA(0, 0, { "numRounds": 2 });
-    // shaHash.update(bWIF.slice(0, 34));
+    const shaHash = new jsSHA(0, 0, { "numRounds": 2 });
+    shaHash.update(bWIF.slice(0, 34));
     //return createHash("sha256").update(createHash("sha256").update(data).digest()).digest();
     // const bChecksum1st = await window.crypto.subtle.digest("SHA-256", data);
     // const bChecksum = await window.crypto.subtle.digest("SHA-256", bChecksum1st);
     // Verify checksum (comparison by String since JS hates comparing object-like primitives)
     const bChecksumWIF = bWIF.slice(bWIF.byteLength - 4);
-    // const bChecksum = shaHash.getHash(0).slice(0, 4);
+    const bChecksum = shaHash.getHash(0).slice(0, 4);
     if (bChecksumWIF.join('') !== bChecksum.join('')) {
         throw Error("Private key checksum is invalid, key may be modified, mis-typed, or corrupt.");
     }
@@ -249,12 +256,54 @@ async function testingPage(){
 
     const pivcode = document.getElementById("PivCode").value
     // const privateKey = document.getElementById("privkey").value
-    const desitinationAddress = document.getElementById("sweepAddr").value
+    const destinationAddress = document.getElementById("sweepAddr").value
 
-    const code = new PromoCode(pivcode)
-    const derived = await code.derivePrivateKey()
-    console.log("derived: ", derived)
-    console.log("DerivedPassed: ", derived.wif)
+    if (window.Worker) {
+        const myWorker = new Worker("worker.js");
+        myWorker.postMessage([212,pivcode]);
+        console.log("Message posted to worker");
 
-    sweep(derived.wif,desitinationAddress)
+
+        myWorker.onmessage = async (e) => {
+        
+            console.log("Message received from worker",e);
+            if(Number.isInteger(e.data)){
+                document.getElementById("derivingCode").innerHTML = "Progress: "+ e.data
+            }else{
+                const returnFromSweep = await sweep(e.data.wif,destinationAddress)
+                
+                console.log("returned from sweep: ", returnFromSweep)
+
+                // TODO: In the future we will return the confirmed txid but for now just return the signedTRX
+                document.getElementById("trx").value = returnFromSweep
+                document.getElementById("trx").style.display = 'block'
+                document.getElementById("derivingCode").innerHTML = "<h4> Signed Transaction: </h4>"
+            }
+
+        };
+    }else{
+        // Old version if web workers aren't available 
+        document.getElementById("derivingCode").innerHTML = 
+        "<h4>Please wait this will take no more then 60 seconds</h4><h5>This screen may freeze while the code is being unlocked. You can open the developer console to see more information</h5>"
+
+        // Required in otherwise this will lock up the page and not allow the textContent to show up
+        setTimeout(async () => {
+            const code = new PromoCode(pivcode)
+            const derived = await code.derivePrivateKey()
+            console.log("derived: ", derived)
+            console.log("DerivedPassed: ", derived.wif)
+            const returnFromSweep = await sweep(derived.wif,destinationAddress)
+
+            console.log("returned from sweep: ", returnFromSweep)
+
+            // TODO: In the future we will return the confirmed txid but for now just return the signedTRX
+            document.getElementById("trx").value = returnFromSweep
+            document.getElementById("trx").style.display = 'block'
+            document.getElementById("derivingCode").innerHTML = "<h4> Signed Transaction: </h4>"
+            
+        }, "1000");
+
+    }
+
+
 }
