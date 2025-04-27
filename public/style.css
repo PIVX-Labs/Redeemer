@@ -1,0 +1,125 @@
+:root {
+  --primary-color: #5E4778;    /* Default to PIVX colors */
+  --secondary-color: #3C2F4B;
+  --background-color: #F0EBF8;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--background-color);
+  transition: background-color 0.5s ease;
+}
+
+.centered-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  border-top: 4px solid var(--primary-color);
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+  width: 320px;
+  max-width: 90vw;
+}
+
+.coin-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  width: 100%;
+  transition: border-color 0.5s ease;
+  min-height: 50px;
+}
+
+.coin-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  margin-right: 10px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 20px;
+  transition: transform 0.3s ease, background-color 0.5s ease;
+}
+
+.coin-icon:hover {
+  transform: scale(1.1);
+}
+
+.form-container {
+  width: 100%;
+}
+
+#coinTitle {
+  color: var(--primary-color);
+  margin: 0;
+  font-size: 1.5rem;
+  transition: color 0.5s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+input, button, select {
+  margin-bottom: 15px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  cursor: pointer;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin: 0;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+label {
+  color: var(--secondary-color);
+  font-weight: bold;
+  transition: color 0.5s ease;
+}
+
+select {
+  background-color: white;
+  cursor: pointer;
+}
+
+#derivingCode {
+  color: var(--secondary-color);
+  margin-top: 15px;
+  transition: color 0.5s ease;
+}

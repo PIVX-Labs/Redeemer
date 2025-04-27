@@ -31,7 +31,15 @@
 
   <!-- New file for all of our new code -->
   <script type="text/javascript" src="js/sweep.js"></script>
+  
+  <!-- Coin configuration -->
+  <script type="text/javascript" src="js/coins.js"></script>
+  
+  <!-- Main application logic -->
+  <script type="text/javascript" src="js/redeemer.js"></script>
 
+  <!-- Link to the stylesheet -->
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
@@ -41,18 +49,27 @@
   -->
 
   <!-- First step is to get the users privkey -->
-  <form>
-    <label for="PivCode">PROMOCODE</label><br>
-    <input type="text" id="PivCode" name="PivCode"><br>
+  <div class="centered-container">
+    <div class="coin-header">
+      <div id="coinIcon" class="coin-icon" aria-label="PIVX Logo">P</div>
+      <h2 id="coinTitle">PIVX Redeemer</h2>
+    </div>
+    <div class="form-container">
+      <label for="coinSelect">Select Coin</label><br>
+      <select id="coinSelect" name="coinSelect"></select><br>
 
-    <label for="sweepAddr">sweep address</label><br>
-    <input type="text" id="sweepAddr" name="sweepAddr"><br>
+      <label for="PivCode">Promo Code</label><br>
+      <input type="text" id="PivCode" name="PivCode"><br>
 
-    <button type="button" onclick="testingPage()">submit</button>
-  </form>
+      <label id="addressLabel" for="sweepAddr">Address</label><br>
+      <input type="text" id="sweepAddr" name="sweepAddr"><br>
 
-  <div id="derivingCode"></div>
-  <textarea id="trx" name="trx" rows="4" cols="50" style="display:none" readonly>
+      <center><button type="button" onclick="testingPage()">Redeem</button></center>
+    </div>
+
+    <div id="derivingCode"></div>
+    <textarea id="trx" name="trx" rows="4" cols="50" style="display:none" readonly>
+  </div>
 
 </body>
 
