@@ -1,0 +1,52 @@
+{
+    "PIVX": {
+        "explorerRoot": "https://zkbitcoin.com",
+        "explorerType": "TREZORBlockbook",
+        "explorerSendTxRoute": "https://zkbitcoin.com/api/v2/sendtx/",
+        "explorerSendTxRequestType": "GET",
+        "explorerGetUTXORoute": "https://zkbitcoin.com/api/v2/utxo/",
+        "explorerGETUTXORequestType": "GET"
+    },
+    "SCC":{
+        "explorerRoot": "https://www.coinexplorer.net",
+        "explorerType": "Custom",
+        "explorerSendTxRoute": "",
+        "explorerSendTxRequestType": "",
+        "explorerGetUTXORoute": "https://www.coinexplorer.net/api/v1/SCC/address/unspent?address=sXCpFnTLs7FLTdXaNbgHESgD2TomX4VSW2",
+        "explorerGETUTXORequestType": "GET"
+    },
+    "MRX":{
+        "explorerDocs":"https://github.com/TheLindaProjectInc/metrix-explorer/tree/master/metrix-explorer-api",
+        "explorerRoot": "https://explorer.metrixcoin.com",
+        "explorerType": "Custom",
+        "explorerSendTxRoute": "",
+        "explorerSendTxRequestType": "",
+        "explorerGetUTXORoute": "https://explorer.metrixcoin.com/address/:address/utxo",
+        "explorerGETUTXORequestType": "GET"
+    },
+    "PEPE":{
+        "explorerRoot": "https://pepeblocks.com",
+        "explorerType": "TREZORBlockbook",
+        "explorerSendTxRoute": "https://pepeblocks.com/api/v2/sendtx/",
+        "explorerSendTxRequestType": "GET",
+        "explorerGetUTXORoute": "https://pepeblocks.com/api/v2/utxo/",
+        "explorerGETUTXORequestType": "GET"
+    },
+    "DOGE":{
+        "explorerRoot": "https://blockbook.doge.zelcore.io",
+        "explorerType": "TREZORBlockbook",
+        "explorerSendTxRoute": "https://blockbook.doge.zelcore.io/api/v2/sendtx/",
+        "explorerSendTxRequestType": "GET",
+        "explorerGetUTXORoute": "https://blockbook.doge.zelcore.io/api/v2/utxo/",
+        "explorerGETUTXORequestType": "GET"
+
+    },
+    "nMNSC":{
+        "explorerRoot": "https://explorer.nmnsc.com",
+        "explorerType": "Custom",
+        "explorerSendTxRoute": "",
+        "explorerSendTxRequestType": "",
+        "explorerGetUTXORoute": "https://explorer.nmnsc.com/ext/getaddresstxs/:address/0/50/internal",
+        "explorerGETUTXORequestType": "GET"
+    }
+}

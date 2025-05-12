@@ -170,11 +170,11 @@ class PromoCode {
     }
 }
 
-async function sweep(privateKey, desitnationAddress){
+async function sweep(privateKey, desitnationAddress, coinSelected){
     console.log(privateKey)
 
     //Validate WIF
-    const validatedAsWIF = verifyWIF(privateKey)
+    const validatedAsWIF = verifyWIF(privateKey,coinSelected)
 
     if(!validatedAsWIF){
         alert('Bad privatekey')
@@ -185,11 +185,11 @@ async function sweep(privateKey, desitnationAddress){
     console.log("getPubKey function: ", pubkey)
 
     
-    const UTXOs = JSON.parse(await getUTXOS(pubkey))
+    const UTXOs = await getUTXOS(coinSelected, pubkey)
     //console.log(UTXOs[0])
 
     // There should only be one UTXO we want to get
-    const txData = JSON.parse(await getTxData(UTXOs[0].txid))
+    const txData = await getTxData(coinSelected,UTXOs[0].txid)
     //console.log(txData)
 
 
@@ -201,7 +201,7 @@ async function sweep(privateKey, desitnationAddress){
     trx.addinput(txid,index,script);
 
     // Calculate the fee
-    const feeAmount = parseFloat(calculatefee(300))
+    const feeAmount = parseFloat(coinSelected.Fee)
     const currentAmountAvaliable = parseFloat(UTXOs[0].value)/100000000
     console.log(UTXOs[0].value)
     console.log(feeAmount)
@@ -218,14 +218,14 @@ async function sweep(privateKey, desitnationAddress){
     
 }
   
-async function verifyWIF(strWIF = "", fParseBytes = false, skipVerification = false) {
+async function verifyWIF(strWIF = "", coinSelected, fParseBytes = false, skipVerification = false) {
     const bWIF = new Uint8Array(bitjs.Base58.decode(strWIF));
     if (bWIF.byteLength !== PRIVKEY_BYTE_LENGTH) {
         throw Error("Private key length (" + bWIF.byteLength + ") is invalid, should be " + PRIVKEY_BYTE_LENGTH + "!");
     }
     
     // Verify the network byte
-    if (bWIF[0] !== SECRET_KEY) {
+    if (bWIF[0] !== coinSelected.privatePrefix) {
         // Find the network it's trying to use, if any
         const cNetwork = Object.keys(cChainParams).filter(strNet => strNet !== 'current').map(strNet => cChainParams[strNet]).find(cNet => cNet.SECRET_KEY === bWIF[0]);
         // Give a specific alert based on the byte properties
@@ -248,19 +248,40 @@ async function verifyWIF(strWIF = "", fParseBytes = false, skipVerification = fa
     return fParseBytes ? Uint8Array.from(bWIF.slice(1, 33)) : true;
 }  
 
+async function networkTransmit(coinData, dataToPost){
+    const currentURL = new URL(window.location.href);
+      const url = currentURL + "api/v1/redeemer/sendtx?" + "coin=" + coinData.ticker + "&tx=" + dataToPost; 
+    try {
+        const response = await fetch(url, {
+        });
+        if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+        }
+
+        const json = await response.json();
+        console.log(json);
+        return json
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
 
 /*
 * This function is just used as a wrapper for sweep while we are testing
 */
 async function testingPage(){
-
+    const coinSelect = document.getElementById("coinSelect")
+    const selectedCoin = coins.find(coin => coin.ticker === coinSelect.value);
     const pivcode = document.getElementById("PivCode").value
     // const privateKey = document.getElementById("privkey").value
     const destinationAddress = document.getElementById("sweepAddr").value
 
+
+
     if (window.Worker) {
         const myWorker = new Worker("worker.js");
-        myWorker.postMessage([212,pivcode]);
+        myWorker.postMessage([selectedCoin.privatePrefix,pivcode]);
         console.log("Message posted to worker");
 
 
@@ -270,14 +291,33 @@ async function testingPage(){
             if(Number.isInteger(e.data)){
                 document.getElementById("derivingCode").innerHTML = "Progress: "+ e.data
             }else{
-                const returnFromSweep = await sweep(e.data.wif,destinationAddress)
+                const returnFromSweep = await sweep(e.data.wif,destinationAddress,selectedCoin)
                 
                 console.log("returned from sweep: ", returnFromSweep)
 
-                // TODO: In the future we will return the confirmed txid but for now just return the signedTRX
-                document.getElementById("trx").value = returnFromSweep
-                document.getElementById("trx").style.display = 'block'
-                document.getElementById("derivingCode").innerHTML = "<h4> Signed Transaction: </h4>"
+                // We are going to try and send the tx on the network
+                const sendToNetwork = await networkTransmit(selectedCoin,returnFromSweep)
+                // If it failed we will read out the signed transaction so that the user can go and put it in an explorer themselves
+                if(sendToNetwork.success == true){
+                    if("transaction" in sendToNetwork){
+                        console.log("Transmitted on network: ", sendToNetwork.transaction)
+                        document.getElementById("trx").value = sendToNetwork.transaction
+                        document.getElementById("trx").style.display = 'block'
+                        document.getElementById("derivingCode").innerHTML = "<h4> Transaction submitted on network: </h4>"
+                    }else{
+                        console.log("Transmitted on network")
+                        document.getElementById("derivingCode").innerHTML = "<h4> Transaction submitted on network: </h4>"
+                    }
+
+                }else{
+                    console.log("Failed to transmit to network")
+                    document.getElementById("trx").value = returnFromSweep
+                    document.getElementById("trx").style.display = 'block'
+                    document.getElementById("derivingCode").innerHTML = "<h4> Signed Transaction: </h4>"
+                }
+
+
+
             }
 
         };
@@ -289,7 +329,7 @@ async function testingPage(){
         // Required in otherwise this will lock up the page and not allow the textContent to show up
         setTimeout(async () => {
             const code = new PromoCode(pivcode)
-            const derived = await code.derivePrivateKey()
+            const derived = await code.derivePrivateKey(selectedCoin.privatePrefix)
             console.log("derived: ", derived)
             console.log("DerivedPassed: ", derived.wif)
             const returnFromSweep = await sweep(derived.wif,destinationAddress)

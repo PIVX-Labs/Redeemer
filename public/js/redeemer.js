@@ -74,6 +74,23 @@ function getQueryParams() {
   
   return params;
 }
+function load_js() {
+    var head= document.getElementsByTagName('head')[0];
+    var script= document.createElement('script');
+    script.src= 'js/bitTrx.js';
+    head.appendChild(script);
+}
+function updateChainParams(){
+  const coinSelect = document.getElementById("coinSelect");
+  const selectedCoin = coins.find(coin => coin.ticker === coinSelect.value);
+
+  PUBKEY_ADDRESS = selectedCoin.pubKeyAddress
+  SECRET_KEY = selectedCoin.privatePrefix
+  PRIVKEY_BYTE_LENGTH = selectedCoin.privKeyByteLength 
+
+  // We have to reload the bitTrx due to changing the chainparams
+  load_js();
+}
 
 // Initialize when the DOM is loaded
 document.addEventListener("DOMContentLoaded", function() {
@@ -111,5 +128,6 @@ document.addEventListener("DOMContentLoaded", function() {
   coinSelect.addEventListener("change", function() {
     updateAddressLabel();
     updateTheme();
+    updateChainParams();
   });
 });
