@@ -249,8 +249,7 @@ async function verifyWIF(strWIF = "", coinSelected, fParseBytes = false, skipVer
 }  
 
 async function networkTransmit(coinData, dataToPost){
-    const currentURL = new URL(window.location.href);
-      const url = currentURL + "api/v1/redeemer/sendtx?" + "coin=" + coinData.ticker + "&tx=" + dataToPost; 
+      const url = "/api/v1/redeemer/sendtx?" + "coin=" + coinData.ticker + "&tx=" + dataToPost; 
     try {
         const response = await fetch(url, {
         });

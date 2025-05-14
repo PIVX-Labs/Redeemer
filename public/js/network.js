@@ -51,10 +51,8 @@
 //   }
 // }
 
-const currentURL = new URL(window.location.href);
 async function getUTXOS(coinData,address){
-  
-    const url = currentURL + "api/v1/redeemer/utxo?" + "coin=" + coinData.ticker + "&addr=" + address; 
+    const url = "/api/v1/redeemer/utxo?" + "coin=" + coinData.ticker + "&addr=" + address; 
     console.log(url)
     try {
         const response = await fetch(url, {
@@ -72,7 +70,7 @@ async function getUTXOS(coinData,address){
 }
 
 async function getTxData(coinData, txid){
-    const url = currentURL + "api/v1/redeemer/tx?" + "coin=" + coinData.ticker + "&tx=" + txid; 
+    const url = "/api/v1/redeemer/tx?" + "coin=" + coinData.ticker + "&tx=" + txid; 
     try {
         const response = await fetch(url, {
         });
