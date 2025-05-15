@@ -5,6 +5,8 @@
  * - name: Full name of the cryptocurrency
  * - Fee: This is the preset fee we will use when transferring coins on the network. This has to match with the batcher to make sense for the user
  * - privatePrefix: This is a coin based parameter used when creating the signed tx
+ * - pubKeyAddress: Coin parameter
+ * - PrivKeyByteLength: Coin parameter
  * - primaryColor: Main theme color (buttons, icons)
  * - secondaryColor: Secondary theme color (text, labels)
  * - backgroundColor: Page background color
@@ -77,31 +79,3 @@ const coins = [
     backgroundColor: "#3e2a45" 
   },
 ];
-  // { 
-  //   ticker: "BTC", 
-  //   name: "Bitcoin", 
-  //   primaryColor: "#F7931A", 
-  //   secondaryColor: "#4D3B24", 
-  //   backgroundColor: "#FFF8E1" 
-  // },
-  // { 
-  //   ticker: "LTC", 
-  //   name: "Litecoin", 
-  //   primaryColor: "#345D9D", 
-  //   secondaryColor: "#172D4F", 
-  //   backgroundColor: "#E9F0F9" 
-  // },
-  // { 
-  //   ticker: "DASH", 
-  //   name: "Dash", 
-  //   primaryColor: "#008CE7", 
-  //   secondaryColor: "#00456F", 
-  //   backgroundColor: "#E5F4FD" 
-  // },
-  // { 
-  //   ticker: "ZEC", 
-  //   name: "Zcash", 
-  //   primaryColor: "#F4B728", 
-  //   secondaryColor: "#795B14", 
-  //   backgroundColor: "#FEF9E7" 
-  // }

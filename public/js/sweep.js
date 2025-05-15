@@ -79,17 +79,11 @@ async function encodePrivkey(pkBytes, privatePrefix) {
 
     // WIF Checksum
     const checksum = Array.from(new Uint8Array(shaObj)).slice(0, 4);
-    console.log(checksum)
-    console.log(pkNetBytesLen)
-    console.log(pkNetBytes)
-    console.log(checksum.length)
     const keyWithChecksum = new Uint8Array(pkNetBytesLen + checksum.length);
     writeToUint8(keyWithChecksum, pkNetBytes, 0);
     writeToUint8(keyWithChecksum, checksum, pkNetBytesLen);
 
     // Return both the raw bytes and the WIF format
-    console.log("Pre to_b58",keyWithChecksum,keyWithChecksum, checksum, pkNetBytesLen)
-    console.log("encodePrivKey: ",pkBytes,to_b58(keyWithChecksum,"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"))
     return { bytes: pkBytes, wif: to_b58(keyWithChecksum,"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz") };
 }
 class PromoCode {
@@ -132,8 +126,6 @@ class PromoCode {
         console.log("Start Time: ", Date.now())
         // Recursively hash until our target is hit
         while (i < target) {
-            // WAS WORKING WITH THIS JUST SLOW AS HELL
-            // arrByteCode = await window.crypto.subtle.digest("SHA-256", arrByteCode);
             
             arrByteCode = Asha256(arrByteCode)
             // Send progress updates every updateInterval iterations
@@ -157,23 +149,15 @@ class PromoCode {
             i++;
 
         }
-        console.log("End Time: ", Date.now())
-        // Encode the final hash as a WIF Private Key (the 'wallet' of the Promo Code)
-        console.log("ArrayCodeBytes: ",Array.from(new Uint8Array(arrByteCode)))
-        console.log("privatePrefix: ",privatePrefix)
-
         
         const cWallet = encodePrivkey(Array.from(new Uint8Array(arrByteCode)), privatePrefix);
-        console.log("cWallet: " + cWallet)
         // Return it!
         return cWallet;
     }
 }
 
 async function sweep(privateKey, desitnationAddress, coinSelected){
-    console.log(privateKey)
-
-    //Validate WIF
+    // Validate WIF
     const validatedAsWIF = verifyWIF(privateKey,coinSelected)
 
     if(!validatedAsWIF){
@@ -181,41 +165,28 @@ async function sweep(privateKey, desitnationAddress, coinSelected){
     }
 
     const pubkey = importWallet(privateKey)
-
-    console.log("getPubKey function: ", pubkey)
-
     
     const UTXOs = await getUTXOS(coinSelected, pubkey)
-    //console.log(UTXOs[0])
 
     // There should only be one UTXO we want to get
     const txData = await getTxData(coinSelected,UTXOs[0].txid)
-    //console.log(txData)
-
 
     const trx = bitjs.transaction();
     let txid = UTXOs[0].txid;
     let index = UTXOs[0].vout;
     let script = txData['vout'][index]['hex'];
-    //console.log(txData['vout'][index]['hex'])
     trx.addinput(txid,index,script);
 
     // Calculate the fee
     const feeAmount = parseFloat(coinSelected.Fee)
     const currentAmountAvaliable = parseFloat(UTXOs[0].value)/100000000
-    console.log(UTXOs[0].value)
-    console.log(feeAmount)
-    const amountToSweep = (currentAmountAvaliable - feeAmount).toFixed(8)
-    console.log(amountToSweep)
 
+    const amountToSweep = (currentAmountAvaliable - feeAmount).toFixed(8)
 
     trx.addoutput(desitnationAddress,amountToSweep);
     const signedTRX = trx.sign(privateKey,1)
-    console.log("Signed TRX: ", signedTRX)
 
-    // TODO: In the future we will return the confirmed txid but for now just return the signedTRX
     return signedTRX
-    
 }
   
 async function verifyWIF(strWIF = "", coinSelected, fParseBytes = false, skipVerification = false) {
@@ -235,10 +206,6 @@ async function verifyWIF(strWIF = "", coinSelected, fParseBytes = false, skipVer
     // Perform SHA256d hash of the WIF bytes
     const shaHash = new jsSHA(0, 0, { "numRounds": 2 });
     shaHash.update(bWIF.slice(0, 34));
-    //return createHash("sha256").update(createHash("sha256").update(data).digest()).digest();
-    // const bChecksum1st = await window.crypto.subtle.digest("SHA-256", data);
-    // const bChecksum = await window.crypto.subtle.digest("SHA-256", bChecksum1st);
-    // Verify checksum (comparison by String since JS hates comparing object-like primitives)
     const bChecksumWIF = bWIF.slice(bWIF.byteLength - 4);
     const bChecksum = shaHash.getHash(0).slice(0, 4);
     if (bChecksumWIF.join('') !== bChecksum.join('')) {
@@ -258,41 +225,27 @@ async function networkTransmit(coinData, dataToPost){
         }
 
         const json = await response.json();
-        console.log(json);
         return json
     } catch (error) {
         console.error(error.message);
     }
 }
 
-
-/*
-* This function is just used as a wrapper for sweep while we are testing
-*/
-async function testingPage(){
+async function Redeem(){
     const coinSelect = document.getElementById("coinSelect")
     const selectedCoin = coins.find(coin => coin.ticker === coinSelect.value);
     const pivcode = document.getElementById("PivCode").value
-    // const privateKey = document.getElementById("privkey").value
     const destinationAddress = document.getElementById("sweepAddr").value
-
-
 
     if (window.Worker) {
         const myWorker = new Worker("worker.js");
         myWorker.postMessage([selectedCoin.privatePrefix,pivcode]);
-        console.log("Message posted to worker");
-
 
         myWorker.onmessage = async (e) => {
-        
-            console.log("Message received from worker",e);
             if(Number.isInteger(e.data)){
                 document.getElementById("derivingCode").innerHTML = "Progress: "+ e.data
             }else{
                 const returnFromSweep = await sweep(e.data.wif,destinationAddress,selectedCoin)
-                
-                console.log("returned from sweep: ", returnFromSweep)
 
                 // We are going to try and send the tx on the network
                 const sendToNetwork = await networkTransmit(selectedCoin,returnFromSweep)
@@ -314,11 +267,7 @@ async function testingPage(){
                     document.getElementById("trx").style.display = 'block'
                     document.getElementById("derivingCode").innerHTML = "<h4> Signed Transaction: </h4>"
                 }
-
-
-
             }
-
         };
     }else{
         // Old version if web workers aren't available 
@@ -333,16 +282,9 @@ async function testingPage(){
             console.log("DerivedPassed: ", derived.wif)
             const returnFromSweep = await sweep(derived.wif,destinationAddress)
 
-            console.log("returned from sweep: ", returnFromSweep)
-
-            // TODO: In the future we will return the confirmed txid but for now just return the signedTRX
             document.getElementById("trx").value = returnFromSweep
             document.getElementById("trx").style.display = 'block'
             document.getElementById("derivingCode").innerHTML = "<h4> Signed Transaction: </h4>"
-            
         }, "1000");
-
     }
-
-
 }

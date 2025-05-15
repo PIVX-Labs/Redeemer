@@ -1,4 +1,4 @@
-//ByteToHexString Convertions
+// ByteToHexString Convertions
 function byteToHexString(uint8arr) {
     if (!uint8arr) {
         return '';
@@ -23,7 +23,7 @@ function hexStringToByte(str) {
 }
 
 var MAP = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";//B58 Encoding Map
-//B58 Encoding
+// B58 Encoding
 var to_b58 = function(
     B,            //Uint8Array raw byte input
     A             //Base58 characters (i.e. "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
@@ -50,7 +50,7 @@ var to_b58 = function(
         s += A[d[j]]; //lookup the character associated with each base58 digit
     return s          //return the final base58 string
 }
-//B58 Decoding
+// B58 Decoding
 var from_b58 = function (
     S,            //Base58 encoded string input
     A             //Base58 characters (i.e. "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
@@ -81,16 +81,16 @@ var from_b58 = function (
 }
 var randArr = new Uint8Array(32) //create a typed array of 32 bytes (256 bits)
 
-//Wallet Import
+// Wallet Import
 function importWallet(newWif = '') {
-    //Wallet Import Format to Private Key
+    // Wallet Import Format to Private Key
     var privateKeyWIF = newWif;
     var byteArryConvert = from_b58(privateKeyWIF, MAP)
     var droplfour = byteArryConvert.slice(0, byteArryConvert.length - 4);
     var key = droplfour.slice(1, droplfour.length);
     var privateKeyBytes = key.slice(0, key.length - 1);
 
-    //Public Key Generation
+    // Public Key Generation
     const pubKey = getPubkey(privateKeyBytes);
 
     // TODO

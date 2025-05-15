@@ -21,10 +21,6 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-// sha256(data) returns the digest
-// sha256() returns an object you can call .add(data) zero or more time and .digest() at the end
-// digest is a 32-byte Uint8Array instance with an added .hex() function.
-// Input should be either a string (that will be encoded as UTF-8) or an array-like object with values 0..255.
 function Asha256(data) {
   let h0 = 0x6a09e667, h1 = 0xbb67ae85, h2 = 0x3c6ef372, h3 = 0xa54ff53a,
       h4 = 0x510e527f, h5 = 0x9b05688c, h6 = 0x1f83d9ab, h7 = 0x5be0cd19,
@@ -136,20 +132,17 @@ function hmac_sha256(key, message) {
  * @returns {PromoKey}
  */
 async function encodePrivkey(pkBytes, privatePrefix) {
-  console.log("Passed: ", pkBytes, privatePrefix )
   
   // Private Key Constants
   const pkNetBytesLen = pkBytes.length + 2;
   const pkNetBytes = new Uint8Array(pkNetBytesLen);
 
-  console.log("Private Key Constants", pkNetBytesLen,pkNetBytes)
 
   // Network Encoding
   pkNetBytes[0] = privatePrefix; // Private key prefix (1 byte)
   writeToUint8(pkNetBytes, pkBytes, 1); // Private key bytes  (32 bytes)
   pkNetBytes[pkNetBytesLen - 1] = 1; // Leading digit      (1 byte)
 
-  console.log("Network Encoding: ",pkNetBytes)
 
   // Double SHA-256 hash
   const shaObj = await dSHA256(pkNetBytes);
@@ -165,8 +158,6 @@ async function encodePrivkey(pkBytes, privatePrefix) {
   writeToUint8(keyWithChecksum, checksum, pkNetBytesLen);
 
   // Return both the raw bytes and the WIF format
-  console.log("Pre to_b58",keyWithChecksum,keyWithChecksum, checksum, pkNetBytesLen)
-  console.log("encodePrivKey: ",pkBytes,to_b58(keyWithChecksum,"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz"))
   return { bytes: pkBytes, wif: to_b58(keyWithChecksum,"123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz") };
 }
 /* --- UTILS --- */
@@ -227,16 +218,11 @@ var to_b58 = function(
 
 onmessage = async (e) => {
   //privatePrefix, promoCode
-    console.log("Message received from main script");
-    console.log("Posting message back to main script: ",e.data[0], e.data[1]);
     const promoCode = e.data[1]
     const privatePrefix = e.data[0]
     const arrTargets = [
         12500000
     ];
-
-    
-
       // Convert the string 'Promo Code' to a Uint8Array byte representation
       let arrByteCode = new TextEncoder().encode(promoCode);
 
@@ -250,10 +236,7 @@ onmessage = async (e) => {
       
       console.log("Start Time: ", Date.now())
       // Recursively hash until our target is hit
-      while (i < target) {
-          // WAS WORKING WITH THIS JUST SLOW AS HELL
-          // arrByteCode = await window.crypto.subtle.digest("SHA-256", arrByteCode);
-          
+      while (i < target) {  
           arrByteCode = Asha256(arrByteCode)
           // Send progress updates every updateInterval iterations
           if (i % updateInterval === 0) {
@@ -275,16 +258,13 @@ onmessage = async (e) => {
           i++;
 
       }
-      console.log("End Time: ", Date.now())
       // Encode the final hash as a WIF Private Key (the 'wallet' of the Promo Code)
       console.log("ArrayCodeBytes: ",Array.from(new Uint8Array(arrByteCode)))
       console.log("privatePrefix: ",privatePrefix)
 
-      
       const cWallet = await encodePrivkey(Array.from(new Uint8Array(arrByteCode)), privatePrefix);
       console.log("cWallet: " + cWallet)
       // Return it!
       postMessage(await cWallet)
-
   };
   
