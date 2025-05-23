@@ -46,7 +46,7 @@ const coins = [
     backgroundColor: "#ceb8cf" 
   },
   {
-    ticker: "PEPE", 
+    ticker: "PEP", 
     name: "PEPE",
     Fee: 0.00010000,
     privatePrefix: 158,
