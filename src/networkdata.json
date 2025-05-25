@@ -24,7 +24,7 @@
         "explorerGetUTXORoute": "https://explorer.metrixcoin.com/address/:address/utxo",
         "explorerGETUTXORequestType": "GET"
     },
-    "PEPE":{
+    "PEP":{
         "explorerRoot": "https://pepeblocks.com",
         "explorerType": "TREZORBlockbook",
         "explorerSendTxRoute": "https://pepeblocks.com/api/v2/sendtx/",
