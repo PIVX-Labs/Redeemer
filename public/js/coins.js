@@ -37,7 +37,7 @@ const coins = [
   {
     ticker: "MRX", 
     name: "MRX",
-    Fee: 0.01000000,
+    Fee: 2.25000000,
     privatePrefix: 85,
     pubKeyAddress: 50,
     privKeyByteLength: 38,
@@ -48,7 +48,7 @@ const coins = [
   {
     ticker: "PEP", 
     name: "PEPE",
-    Fee: 0.00010000,
+    Fee: 0.01000000,
     privatePrefix: 158,
     pubKeyAddress: 56,
     privKeyByteLength: 38,
