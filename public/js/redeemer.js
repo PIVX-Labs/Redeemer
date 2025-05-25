@@ -130,4 +130,5 @@ document.addEventListener("DOMContentLoaded", function() {
     updateTheme();
     updateChainParams();
   });
+  updateChainParams();
 });

@@ -156,7 +156,7 @@ class PromoCode {
     }
 }
 
-async function sweep(privateKey, desitnationAddress, coinSelected){
+async function sweep(privateKey, destinationAddress, coinSelected){
     // Validate WIF
     const validatedAsWIF = verifyWIF(privateKey,coinSelected)
 
@@ -183,7 +183,7 @@ async function sweep(privateKey, desitnationAddress, coinSelected){
 
     const amountToSweep = (currentAmountAvaliable - feeAmount).toFixed(8)
 
-    trx.addoutput(desitnationAddress,amountToSweep);
+    trx.addoutput(destinationAddress,amountToSweep);
     const signedTRX = trx.sign(privateKey,1)
 
     return signedTRX
