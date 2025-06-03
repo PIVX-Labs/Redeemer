@@ -168,6 +168,15 @@ async function sweep(privateKey, destinationAddress, coinSelected){
     
     const UTXOs = await getUTXOS(coinSelected, pubkey)
 
+    // Check if UTXO returned
+    if(UTXOs[0]?.txid == undefined){
+        console.log("Failure, issue with UTXO")
+        document.getElementById("trx").value = "Failure"
+        document.getElementById("trx").style.display = 'block'
+        document.getElementById("derivingCode").innerHTML = "<h4> Failure to send coins from that promo </h4>"
+        return "Failed to find coins from that Promo"
+    }
+
     // There should only be one UTXO we want to get
     const txData = await getTxData(coinSelected,UTXOs[0].txid)
 
