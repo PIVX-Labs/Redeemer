@@ -171,9 +171,6 @@ async function sweep(privateKey, destinationAddress, coinSelected){
     // Check if UTXO returned
     if(UTXOs[0]?.txid == undefined){
         console.log("Failure, issue with UTXO")
-        document.getElementById("trx").value = "Failure"
-        document.getElementById("trx").style.display = 'block'
-        document.getElementById("derivingCode").innerHTML = "<h4> Failure to send coins from that promo </h4>"
         return "Failed to find coins from that Promo"
     }
 
@@ -240,20 +237,57 @@ async function networkTransmit(coinData, dataToPost){
     }
 }
 
+function endisableInputs(booleanInput) {
+    let coinselect = document.getElementById('coinSelect');
+    let PivCode = document.getElementById('PivCode');
+    let sweepAddr = document.getElementById('sweepAddr');
+
+    coinselect.disabled = !booleanInput;
+    PivCode.disabled = !booleanInput;
+    sweepAddr.disabled = !booleanInput;
+    document.getElementById('redeemBtn').disabled = !booleanInput;
+    
+    // Clear inputs
+    if(booleanInput) {
+        PivCode.value = "";
+        sweepAddr.value = "";
+    }
+}
+
 async function Redeem(){
     const coinSelect = document.getElementById("coinSelect")
     const selectedCoin = coins.find(coin => coin.ticker === coinSelect.value);
     const pivcode = document.getElementById("PivCode").value
     const destinationAddress = document.getElementById("sweepAddr").value
 
+    // If empty, don't do anything
+    if(pivcode == "" || destinationAddress == "") {
+        return;
+    }
+
+    // Disable inputs
+    endisableInputs(false);
+
     if (window.Worker) {
         const myWorker = new Worker("worker.js");
         myWorker.postMessage([selectedCoin.privatePrefix,pivcode]);
 
+        // Hide error
+        document.getElementById("trx").style.display = 'none';
+
+        // Show redeeming
+        document.getElementById("derivingCode").style.display = 'block';
+
         myWorker.onmessage = async (e) => {
             if(Number.isInteger(e.data)){
-                document.getElementById("derivingCode").innerHTML = "Progress: "+ e.data
-            }else{
+                document.getElementById("derivingCode").innerHTML = `
+                <div class="d-center redeemProgress">
+                    <span class="text">Redeeming...</span>
+                    <div class="progressbar">
+                        <div class="inner" style="width: ${e.data}%;"></div>
+                    </div>
+                </div>`;
+            } else {
                 const returnFromSweep = await sweep(e.data.wif,destinationAddress,selectedCoin)
 
                 // We are going to try and send the tx on the network
@@ -261,24 +295,43 @@ async function Redeem(){
                 // If it failed we will read out the signed transaction so that the user can go and put it in an explorer themselves
                 if(sendToNetwork.success == true){
                     if("transaction" in sendToNetwork){
-                        console.log("Transmitted on network: ", sendToNetwork.transaction)
-                        document.getElementById("trx").value = sendToNetwork.transaction
-                        document.getElementById("trx").style.display = 'block'
-                        document.getElementById("derivingCode").innerHTML = "<h4> Transaction submitted on network: </h4>"
-                    }else{
+                        console.log("Transmitted on network: ", sendToNetwork.transaction);
+                        
+                        // Hide redeeming
+                        document.getElementById('derivingCode').style.display = 'none';
+
+                        // Show success
+                        document.getElementById("trxHeader").innerHTML = `Transaction submitted on network`;
+                        document.getElementById("trxText").innerHTML = sendToNetwork.transaction;
+                        document.getElementById("trx").style.display = 'flex';
+                        document.getElementById("trx").classList.add('redeemSuccess');
+                        document.getElementById("trx").classList.remove('redeemError');
+
+                        // Enable inputs
+                        endisableInputs(true);
+                    } else {
                         console.log("Transmitted on network")
                         document.getElementById("derivingCode").innerHTML = "<h4> Transaction submitted on network: </h4>"
                     }
+                } else {
+                    console.log("Failed to transmit to network");
+                    
+                    // Hide redeeming
+                    document.getElementById('derivingCode').style.display = 'none';
 
-                }else{
-                    console.log("Failed to transmit to network")
-                    document.getElementById("trx").value = returnFromSweep
-                    document.getElementById("trx").style.display = 'block'
-                    document.getElementById("derivingCode").innerHTML = "<h4> Signed Transaction: </h4>"
+                    // Show error message
+                    document.getElementById("trxHeader").innerHTML = `Signed Transaction`;
+                    document.getElementById("trxText").innerHTML = returnFromSweep;
+                    document.getElementById("trx").style.display = 'flex';
+                    document.getElementById("trx").classList.remove('redeemSuccess');
+                    document.getElementById("trx").classList.add('redeemError');
+
+                    // Enable inputs
+                    endisableInputs(true);
                 }
             }
         };
-    }else{
+    } else {
         // Old version if web workers aren't available 
         document.getElementById("derivingCode").innerHTML = 
         "<h4>Please wait this will take no more then 60 seconds</h4><h5>This screen may freeze while the code is being unlocked. You can open the developer console to see more information</h5>"
@@ -291,9 +344,18 @@ async function Redeem(){
             console.log("DerivedPassed: ", derived.wif)
             const returnFromSweep = await sweep(derived.wif,destinationAddress)
 
-            document.getElementById("trx").value = returnFromSweep
-            document.getElementById("trx").style.display = 'block'
-            document.getElementById("derivingCode").innerHTML = "<h4> Signed Transaction: </h4>"
+            // Hide redeeming
+            document.getElementById('derivingCode').style.display = 'none';
+
+            // Show Error
+            document.getElementById("trxHeader").innerHTML = `Signed Transaction`;
+            document.getElementById("trxText").innerHTML = returnFromSweep;
+            document.getElementById("trx").style.display = 'flex';
+            document.getElementById("trx").classList.remove('redeemSuccess');
+            document.getElementById("trx").classList.add('redeemError');
+            
+            // Enable inputs
+            endisableInputs(true);
         }, "1000");
     }
 }

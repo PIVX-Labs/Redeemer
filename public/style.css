@@ -102,9 +102,15 @@ button {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button:hover {
+button:not(:disabled):hover {
   background-color: var(--secondary-color);
   transform: translateY(-2px);
+}
+
+button:disabled {
+  background-color: color-mix(in srgb, var(--primary-color) 70%, white);
+  cursor:auto;
+  transform: none;
 }
 
 label {
@@ -120,6 +126,68 @@ select {
 
 #derivingCode {
   color: var(--secondary-color);
-  margin-top: 15px;
   transition: color 0.5s ease;
+}
+
+.progressbar {
+  width: 100%;
+  background-color: color-mix(in srgb, var(--primary-color) 25%, white);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progressbar .inner {
+  transition: all .250s ease-in-out;
+  background-color: var(--primary-color);
+  height: 20px;
+  border-radius: 100px;
+}
+
+.d-center {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.redeemProgress {
+  background-color: color-mix(in srgb, var(--primary-color) 70%, white);
+  border: 2px solid color-mix(in srgb, var(--primary-color) 80%, white);
+  padding:10px 13px 10px 13px;
+  border-radius:10px;
+  color:#fff;
+}
+
+.redeemError {
+  background-color:#de5b5b;
+  border: 2px solid #da4949;
+}
+
+.redeemSuccess {
+  background-color:#62ca5a;
+  border: 2px solid #47c13e;
+}
+
+.redeemProgress .text {
+  margin-bottom:5px;
+  margin-left:4px;
+  font-size:14px;
+}
+
+.derivingCode {
+  width:100%;
+}
+
+.redeemMsg {
+  width:calc(100% - 26px);
+}
+
+.redeemMsg .text {
+  margin-left:0px;
+  font-weight: 600;
+  font-size:15px;
+}
+
+.redeemMsg .textMsg {
+  font-size:13px;
+  word-break: break-all;
 }
