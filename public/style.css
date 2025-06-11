@@ -102,9 +102,15 @@ button {
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-button:hover {
+button:not(:disabled):hover {
   background-color: var(--secondary-color);
   transform: translateY(-2px);
+}
+
+button:disabled {
+  background-color: color-mix(in srgb, var(--primary-color) 70%, white);
+  cursor:auto;
+  transform: none;
 }
 
 label {
@@ -183,4 +189,5 @@ select {
 
 .redeemMsg .textMsg {
   font-size:13px;
+  word-break: break-all;
 }

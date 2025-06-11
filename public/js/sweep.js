@@ -237,17 +237,41 @@ async function networkTransmit(coinData, dataToPost){
     }
 }
 
+function endisableInputs(booleanInput) {
+    let coinselect = document.getElementById('coinSelect');
+    let PivCode = document.getElementById('PivCode');
+    let sweepAddr = document.getElementById('sweepAddr');
+
+    coinselect.disabled = !booleanInput;
+    PivCode.disabled = !booleanInput;
+    sweepAddr.disabled = !booleanInput;
+    document.getElementById('redeemBtn').disabled = !booleanInput;
+    
+    // Clear inputs
+    if(booleanInput) {
+        PivCode.value = "";
+        sweepAddr.value = "";
+    }
+}
+
 async function Redeem(){
     const coinSelect = document.getElementById("coinSelect")
     const selectedCoin = coins.find(coin => coin.ticker === coinSelect.value);
     const pivcode = document.getElementById("PivCode").value
     const destinationAddress = document.getElementById("sweepAddr").value
 
+    // If empty, don't do anything
+    if(pivcode == "" || destinationAddress == "") {
+        return;
+    }
+
+    // Disable inputs
+    endisableInputs(false);
+
     if (window.Worker) {
         const myWorker = new Worker("worker.js");
         myWorker.postMessage([selectedCoin.privatePrefix,pivcode]);
 
-        console.log('trigger');
         // Hide error
         document.getElementById("trx").style.display = 'none';
 
@@ -282,6 +306,9 @@ async function Redeem(){
                         document.getElementById("trx").style.display = 'flex';
                         document.getElementById("trx").classList.add('redeemSuccess');
                         document.getElementById("trx").classList.remove('redeemError');
+
+                        // Enable inputs
+                        endisableInputs(true);
                     } else {
                         console.log("Transmitted on network")
                         document.getElementById("derivingCode").innerHTML = "<h4> Transaction submitted on network: </h4>"
@@ -298,6 +325,9 @@ async function Redeem(){
                     document.getElementById("trx").style.display = 'flex';
                     document.getElementById("trx").classList.remove('redeemSuccess');
                     document.getElementById("trx").classList.add('redeemError');
+
+                    // Enable inputs
+                    endisableInputs(true);
                 }
             }
         };
@@ -323,6 +353,9 @@ async function Redeem(){
             document.getElementById("trx").style.display = 'flex';
             document.getElementById("trx").classList.remove('redeemSuccess');
             document.getElementById("trx").classList.add('redeemError');
+            
+            // Enable inputs
+            endisableInputs(true);
         }, "1000");
     }
 }
