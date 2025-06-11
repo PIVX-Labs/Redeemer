@@ -64,8 +64,11 @@
       <center><button type="button" onclick="Redeem()">Redeem</button></center>
     </div>
 
-    <div id="derivingCode"></div>
-    <textarea id="trx" name="trx" rows="4" cols="50" style="display:none" readonly>
+    <div id="derivingCode" class="derivingCode"></div>
+    <div id="trx" class="d-center redeemProgress redeemMsg" style="display:none!important;">
+        <span id="trxHeader" class="text">Signed Transaction</span>
+        <span id="trxText" class="textMsg">Failed to find coins from that Promo</span>
+    </div>
   </div>
 
 </body>
