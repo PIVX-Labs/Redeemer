@@ -9,19 +9,19 @@
     },
     "SCC":{
         "explorerRoot": "https://www.coinexplorer.net",
-        "explorerType": "Custom",
-        "explorerSendTxRoute": "",
-        "explorerSendTxRequestType": "",
-        "explorerGetUTXORoute": "https://www.coinexplorer.net/api/v1/SCC/address/unspent?address=sXCpFnTLs7FLTdXaNbgHESgD2TomX4VSW2",
+        "explorerType": "TREZORBlockbook",
+        "explorerSendTxRoute": "https://scc.explorer.scc.tips/api/v2/sendtx/",
+        "explorerSendTxRequestType": "GET",
+        "explorerGetUTXORoute": "https://scc.explorer.scc.tips/api/v2/utxo/",
         "explorerGETUTXORequestType": "GET"
     },
     "MRX":{
         "explorerDocs":"https://github.com/TheLindaProjectInc/metrix-explorer/tree/master/metrix-explorer-api",
         "explorerRoot": "https://explorer.metrixcoin.com",
-        "explorerType": "Custom",
-        "explorerSendTxRoute": "",
-        "explorerSendTxRequestType": "",
-        "explorerGetUTXORoute": "https://explorer.metrixcoin.com/address/:address/utxo",
+        "explorerType": "TREZORBlockbook",
+        "explorerSendTxRoute": "https://mrx.explorer.scc.tips/api/v2/sendtx/",
+        "explorerSendTxRequestType": "GET",
+        "explorerGetUTXORoute": "https://mrx.explorer.scc.tips/api/v2/utxo/",
         "explorerGETUTXORequestType": "GET"
     },
     "PEP":{
@@ -43,10 +43,10 @@
     },
     "nMNSC":{
         "explorerRoot": "https://explorer.nmnsc.com",
-        "explorerType": "Custom",
-        "explorerSendTxRoute": "",
-        "explorerSendTxRequestType": "",
-        "explorerGetUTXORoute": "https://explorer.nmnsc.com/ext/getaddresstxs/:address/0/50/internal",
+        "explorerType": "TREZORBlockbook",
+        "explorerSendTxRoute": "https://nmnsc.explorer.scc.tips/api/v2/sendtx/",
+        "explorerSendTxRequestType": "GET",
+        "explorerGetUTXORoute": "https://nmnsc.explorer.scc.tips/api/v2/utxo/",
         "explorerGETUTXORequestType": "GET"
     }
 }
