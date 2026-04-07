@@ -1,0 +1,52 @@
+{
+    "PIVX": {
+        "explorerRoot": "https://zkbitcoin.com",
+        "explorerType": "TREZORBlockbook",
+        "explorerSendTxRoute": "https://zkbitcoin.com/api/v2/sendtx/",
+        "explorerSendTxRequestType": "GET",
+        "explorerGetUTXORoute": "https://zkbitcoin.com/api/v2/utxo/",
+        "explorerGETUTXORequestType": "GET"
+    },
+    "SCC":{
+        "explorerRoot": "https://www.coinexplorer.net",
+        "explorerType": "TREZORBlockbook",
+        "explorerSendTxRoute": "https://scc.explorer.scc.tips/api/v2/sendtx/",
+        "explorerSendTxRequestType": "GET",
+        "explorerGetUTXORoute": "https://scc.explorer.scc.tips/api/v2/utxo/",
+        "explorerGETUTXORequestType": "GET"
+    },
+    "MRX":{
+        "explorerDocs":"https://github.com/TheLindaProjectInc/metrix-explorer/tree/master/metrix-explorer-api",
+        "explorerRoot": "https://explorer.metrixcoin.com",
+        "explorerType": "TREZORBlockbook",
+        "explorerSendTxRoute": "https://mrx.explorer.scc.tips/api/v2/sendtx/",
+        "explorerSendTxRequestType": "GET",
+        "explorerGetUTXORoute": "https://mrx.explorer.scc.tips/api/v2/utxo/",
+        "explorerGETUTXORequestType": "GET"
+    },
+    "PEP":{
+        "explorerRoot": "https://pepeblocks.com",
+        "explorerType": "TREZORBlockbook",
+        "explorerSendTxRoute": "https://pepeblocks.com/api/v2/sendtx/",
+        "explorerSendTxRequestType": "GET",
+        "explorerGetUTXORoute": "https://pepeblocks.com/api/v2/utxo/",
+        "explorerGETUTXORequestType": "GET"
+    },
+    "DOGE":{
+        "explorerRoot": "https://blockbook.doge.zelcore.io",
+        "explorerType": "TREZORBlockbook",
+        "explorerSendTxRoute": "https://blockbook.doge.zelcore.io/api/v2/sendtx/",
+        "explorerSendTxRequestType": "GET",
+        "explorerGetUTXORoute": "https://blockbook.doge.zelcore.io/api/v2/utxo/",
+        "explorerGETUTXORequestType": "GET"
+
+    },
+    "nMNSC":{
+        "explorerRoot": "https://explorer.nmnsc.com",
+        "explorerType": "TREZORBlockbook",
+        "explorerSendTxRoute": "https://nmnsc.explorer.scc.tips/api/v2/sendtx/",
+        "explorerSendTxRequestType": "GET",
+        "explorerGetUTXORoute": "https://nmnsc.explorer.scc.tips/api/v2/utxo/",
+        "explorerGETUTXORequestType": "GET"
+    }
+}

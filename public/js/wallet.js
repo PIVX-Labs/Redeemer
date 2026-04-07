@@ -1,4 +1,4 @@
-//ByteToHexString Convertions
+// ByteToHexString Convertions
 function byteToHexString(uint8arr) {
     if (!uint8arr) {
         return '';
@@ -23,8 +23,8 @@ function hexStringToByte(str) {
 }
 
 var MAP = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";//B58 Encoding Map
-//B58 Encoding
-var to_b58 = function (
+// B58 Encoding
+var to_b58 = function(
     B,            //Uint8Array raw byte input
     A             //Base58 characters (i.e. "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
 ) {
@@ -34,11 +34,11 @@ var to_b58 = function (
         j,        //the iterator variable for the base58 digit array (d)
         c,        //the carry amount variable that is used to overflow from the current base58 digit to the next base58 digit
         n;        //a temporary placeholder variable for the current base58 digit
-    for (i in B) { //loop through each byte in the input stream
+    for(i in B) { //loop through each byte in the input stream
         j = 0,                           //reset the base58 digit iterator
-            c = B[i];                        //set the initial carry amount equal to the current byte amount
+        c = B[i];                        //set the initial carry amount equal to the current byte amount
         s += c || s.length ^ i ? "" : 1; //prepend the result string with a "1" (0 in base58) if the byte stream is zero and non-zero bytes haven't been seen yet (to ensure correct decode length)
-        while (j in d || c) {             //start looping through the digits until there are no more digits and no carry amount
+        while(j in d || c) {             //start looping through the digits until there are no more digits and no carry amount
             n = d[j];                    //set the placeholder for the current base58 digit
             n = n ? n * 256 + c : c;     //shift the current base58 one byte and add the carry amount (or just add the carry amount if this is a new digit)
             c = n / 58 | 0;              //find the new carry amount (floored integer of current digit divided by 58)
@@ -46,11 +46,11 @@ var to_b58 = function (
             j++                          //iterate to the next base58 digit
         }
     }
-    while (j--)        //since the base58 digits are backwards, loop through them in reverse order
+    while(j--)        //since the base58 digits are backwards, loop through them in reverse order
         s += A[d[j]]; //lookup the character associated with each base58 digit
     return s          //return the final base58 string
 }
-//B58 Decoding
+// B58 Decoding
 var from_b58 = function (
     S,            //Base58 encoded string input
     A             //Base58 characters (i.e. "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz")
@@ -81,19 +81,21 @@ var from_b58 = function (
 }
 var randArr = new Uint8Array(32) //create a typed array of 32 bytes (256 bits)
 
-//Wallet Import
+// Wallet Import
 function importWallet(newWif = '') {
-    //Wallet Import Format to Private Key
+    // Wallet Import Format to Private Key
     var privateKeyWIF = newWif;
     var byteArryConvert = from_b58(privateKeyWIF, MAP)
     var droplfour = byteArryConvert.slice(0, byteArryConvert.length - 4);
     var key = droplfour.slice(1, droplfour.length);
     var privateKeyBytes = key.slice(0, key.length - 1);
 
-    //Public Key Generation
+    // Public Key Generation
     const pubKey = getPubkey(privateKeyBytes);
 
     // TODO
+    return pubKey
+
 }
 
 function getPubkey(privateKeyBytes) {
@@ -128,5 +130,6 @@ function getPubkey(privateKeyBytes) {
     var checksumPubKey = String(pubKeyHashingSF).substr(0, 8).toUpperCase()
     var pubKeyPreBase = pubKeyHashNetwork + checksumPubKey
     var pubKey = to_b58(hexStringToByte(pubKeyPreBase), MAP)
-    console.log(pubKey);
+    // console.log(pubKey);
+    return pubKey
 }

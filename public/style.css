@@ -1,0 +1,193 @@
+:root {
+  --primary-color: #5E4778;    /* Default to PIVX colors */
+  --secondary-color: #3C2F4B;
+  --background-color: #F0EBF8;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: var(--background-color);
+  transition: background-color 0.5s ease;
+}
+
+.centered-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  border-top: 4px solid var(--primary-color);
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+  width: 320px;
+  max-width: 90vw;
+}
+
+.coin-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  width: 100%;
+  transition: border-color 0.5s ease;
+  min-height: 50px;
+}
+
+.coin-icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  margin-right: 10px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 20px;
+  transition: transform 0.3s ease, background-color 0.5s ease;
+}
+
+.coin-icon:hover {
+  transform: scale(1.1);
+}
+
+.form-container {
+  width: 100%;
+}
+
+#coinTitle {
+  color: var(--primary-color);
+  margin: 0;
+  font-size: 1.5rem;
+  transition: color 0.5s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+input, button, select {
+  margin-bottom: 15px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  cursor: pointer;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  margin: 0;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:not(:disabled):hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+button:disabled {
+  background-color: color-mix(in srgb, var(--primary-color) 70%, white);
+  cursor:auto;
+  transform: none;
+}
+
+label {
+  color: var(--secondary-color);
+  font-weight: bold;
+  transition: color 0.5s ease;
+}
+
+select {
+  background-color: white;
+  cursor: pointer;
+}
+
+#derivingCode {
+  color: var(--secondary-color);
+  transition: color 0.5s ease;
+}
+
+.progressbar {
+  width: 100%;
+  background-color: color-mix(in srgb, var(--primary-color) 25%, white);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progressbar .inner {
+  transition: all .250s ease-in-out;
+  background-color: var(--primary-color);
+  height: 20px;
+  border-radius: 100px;
+}
+
+.d-center {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.redeemProgress {
+  background-color: color-mix(in srgb, var(--primary-color) 70%, white);
+  border: 2px solid color-mix(in srgb, var(--primary-color) 80%, white);
+  padding:10px 13px 10px 13px;
+  border-radius:10px;
+  color:#fff;
+}
+
+.redeemError {
+  background-color:#de5b5b;
+  border: 2px solid #da4949;
+}
+
+.redeemSuccess {
+  background-color:#62ca5a;
+  border: 2px solid #47c13e;
+}
+
+.redeemProgress .text {
+  margin-bottom:5px;
+  margin-left:4px;
+  font-size:14px;
+}
+
+.derivingCode {
+  width:100%;
+}
+
+.redeemMsg {
+  width:calc(100% - 26px);
+}
+
+.redeemMsg .text {
+  margin-left:0px;
+  font-weight: 600;
+  font-size:15px;
+}
+
+.redeemMsg .textMsg {
+  font-size:13px;
+  word-break: break-all;
+}

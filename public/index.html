@@ -6,12 +6,11 @@
 
   <!--- IMPORTANT: CHAIN PARAMS BELOW, DO NOT EDIT UNLESS YOU'RE ABSOLUTELY CERTAIN YOU KNOW WHAT YOU'RE DOING  --->
   <script>
-      // In most BTC-derived coins, the below parameters can be found in the 'src/chainparams.cpp' Mainnet configuration.
-      // These below params share the same names as the CPP params, so finding and editing these is easy-peasy!
-
+      // These get changed when you select a coin from the drop down. Don't edit here as these are the defaults
       /* chainparams */
-      const PUBKEY_ADDRESS = 30;
-      const SECRET_KEY     = 212;
+      let PUBKEY_ADDRESS = 30;
+      let SECRET_KEY     = 212;
+      let PRIVKEY_BYTE_LENGTH = 38;  
   </script>
 
   <script type="text/javascript" src="js/lib/crypto-min.js"></script>
@@ -21,14 +20,57 @@
   <script type="text/javascript" src="js/lib/jsbn.js"></script>
   <script type="text/javascript" src="js/lib/ellipticcurve.js"></script>
   <script type="text/javascript" src="js/lib/sha256.js"></script>
+  <script type="text/javascript" src="js/lib/Andreasha256.js"></script>
 
   <script type="text/javascript" src="js/wallet.js"></script>
   <script type="text/javascript" src="js/network.js"></script>
   <script type="text/javascript" src="js/bitTrx.js"></script>
-  <script type="text/javascript" src="js/global.js"></script>
+
+  <!-- New file for all of our new code -->
+  <script type="text/javascript" src="js/sweep.js"></script>
+  
+  <!-- Coin configuration -->
+  <script type="text/javascript" src="js/coins.js"></script>
+  
+  <!-- Main application logic -->
+  <script type="text/javascript" src="js/redeemer.js"></script>
+
+  <!-- Link to the stylesheet -->
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+  <!-- 
+    UTXO syncing (grabbing 'em all off Blockbook for the given privkey).
+    Sweeping those UTXOs to user-given-address. 
+  -->
+
+  <!-- First step is to get the users privkey -->
+  <div class="centered-container">
+    <div class="coin-header">
+      <div id="coinIcon" class="coin-icon" aria-label="PIVX Logo">P</div>
+      <h2 id="coinTitle">PIVX Redeemer</h2>
+    </div>
+    <div class="form-container">
+      <label for="coinSelect">Select Coin</label><br>
+      <select id="coinSelect" name="coinSelect"></select><br>
+
+      <label for="PivCode">Promo Code</label><br>
+      <input type="text" id="PivCode" name="PivCode"><br>
+
+      <label id="addressLabel" for="sweepAddr">Address</label><br>
+      <input type="text" id="sweepAddr" name="sweepAddr"><br>
+
+      <center><button type="button" id="redeemBtn" onclick="Redeem()">Redeem</button></center>
+    </div>
+
+    <div id="derivingCode" class="derivingCode"></div>
+    <div id="trx" class="d-center redeemProgress redeemMsg" style="display:none!important;">
+        <span id="trxHeader" class="text">Signed Transaction</span>
+        <span id="trxText" class="textMsg">Failed to find coins from that Promo</span>
+    </div>
+  </div>
+
 </body>
 
 </html>

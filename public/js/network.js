@@ -1,7 +1,31 @@
+async function getUTXOS(coinData,address){
+    const url = "/api/v1/redeemer/utxo?" + "coin=" + coinData.ticker + "&addr=" + address; 
+    try {
+        const response = await fetch(url, {
+        });
+        if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+        }
 
-var url = 'https://explorer.duddino.com';
+        const json = await response.json();
+        return json
+    } catch (error) {
+        console.error(error.message);
+    }
+}
 
-var calculatefee = function (bytes) {
-  // TEMPORARY: Hardcoded fee per-byte
-  fee = Number(((bytes * 250) / 100000000).toFixed(8)); // 250 sats/byte
+async function getTxData(coinData, txid){
+    const url = "/api/v1/redeemer/tx?" + "coin=" + coinData.ticker + "&tx=" + txid; 
+    try {
+        const response = await fetch(url, {
+        });
+        if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+        }
+
+        const json = await response.json();
+        return json
+    } catch (error) {
+        console.error(error.message);
+    }
 }
